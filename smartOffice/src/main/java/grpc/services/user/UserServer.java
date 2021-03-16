@@ -11,7 +11,7 @@ public class UserServer extends UserServiceImplBase{
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		System.out.println("Starting gRPC Server");
+		System.out.println("Starting gRPC User Auth Server");
 		UserServer userserver = new UserServer();
 
 		int port = 50051;

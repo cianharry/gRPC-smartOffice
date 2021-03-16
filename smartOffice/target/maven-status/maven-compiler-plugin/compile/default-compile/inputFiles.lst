@@ -1,12 +1,32 @@
-/Users/Harry/eclipse-workspace/smartOffice/src/main/java/grpc/services/user/LoginResponseOrBuilder.java
-/Users/Harry/eclipse-workspace/smartOffice/src/main/java/grpc/services/user/LogoutRequest.java
-/Users/Harry/eclipse-workspace/smartOffice/src/main/java/grpc/services/user/LogoutResponseOrBuilder.java
-/Users/Harry/eclipse-workspace/smartOffice/src/main/java/grpc/services/user/EmptyOrBuilder.java
-/Users/Harry/eclipse-workspace/smartOffice/src/main/java/grpc/services/user/UserServiceImpl.java
-/Users/Harry/eclipse-workspace/smartOffice/src/main/java/grpc/services/user/Empty.java
-/Users/Harry/eclipse-workspace/smartOffice/src/main/java/grpc/services/user/LoginRequest.java
-/Users/Harry/eclipse-workspace/smartOffice/src/main/java/grpc/services/user/LoginRequestOrBuilder.java
-/Users/Harry/eclipse-workspace/smartOffice/src/main/java/grpc/services/user/UserServiceGrpc.java
-/Users/Harry/eclipse-workspace/smartOffice/src/main/java/grpc/services/user/LoginResponse.java
-/Users/Harry/eclipse-workspace/smartOffice/src/main/java/grpc/services/user/LogoutRequestOrBuilder.java
-/Users/Harry/eclipse-workspace/smartOffice/src/main/java/grpc/services/user/LogoutResponse.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/LightPowerResponseOrBuilder.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/HeatPowerResponse.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/LogoutResponse.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/EmptyOrBuilder.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/HeatPowerRequest.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/LogoutRequestOrBuilder.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/HeatTempRequest.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/HeatTempResponseOrBuilder.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/LoginRequest.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/LightPowerRequest.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/LoginResponseOrBuilder.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/LightPowerRequestOrBuilder.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/UserServiceGrpc.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/UserServiceImpl.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/UtilitiesServiceImpl.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/UserServer.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/LightPowerResponse.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/HeatPowerResponseOrBuilder.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/HeatTempResponse.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/LoginRequestOrBuilder.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/HeatTempRequestOrBuilder.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/LightSettingRequest.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/HeatPowerRequestOrBuilder.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/LightSettingResponseOrBuilder.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/UtilitiesServiceGrpc.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/UserClient.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/LogoutResponseOrBuilder.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/Empty.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/LightSettingRequestOrBuilder.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/LightSettingResponse.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/LogoutRequest.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/LoginResponse.java
