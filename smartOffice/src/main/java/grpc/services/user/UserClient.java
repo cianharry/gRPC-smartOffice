@@ -8,7 +8,7 @@ public class UserClient {
 	private static UserServiceGrpc.UserServiceBlockingStub blockingStub;
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+
 		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50051).usePlaintext().build();
 
 		blockingStub = UserServiceGrpc.newBlockingStub(channel);

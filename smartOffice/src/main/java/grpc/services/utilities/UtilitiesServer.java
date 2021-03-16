@@ -35,5 +35,25 @@ public class UtilitiesServer extends UtilitiesServiceImplBase {
 	
 	}
 	
-	
+	@Override
+	public void switchLightPower(LightPowerRequest request, StreamObserver<LightPowerResponse> responseObserver) {
+		// notification that the method has been invoked
+		System.out.println("Receiving a request for lighting system power!");
+		
+		// get the lpower boolean defined in the LightPowerRequest.java file
+		boolean lpower = request.getLpower();
+		
+		// if the value is true the lights are on, otherwise the lights are off
+		if(lpower) {
+			System.out.println("Turning lights on...");
+		}
+		else {
+			System.out.println("Turning lights off...");
+		}
+		
+		LightPowerResponse response = LightPowerResponse.newBuilder().setLpower(lpower).build();
+		
+		responseObserver.onNext(response);
+        responseObserver.onCompleted();
+	}
 }

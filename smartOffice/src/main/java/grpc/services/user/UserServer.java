@@ -49,7 +49,7 @@ public class UserServer extends UserServiceImplBase{
 			response.setResponseCode(1).setResponseMessage(username + ".....Successfully logged in");
 		}
 		else {
-			// return Success response
+			// return Failure response
 			response.setResponseCode(99).setResponseMessage(username + "... Sorry Login Failed");
 		}
 
