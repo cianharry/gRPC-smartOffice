@@ -56,4 +56,50 @@ public class UtilitiesServer extends UtilitiesServiceImplBase {
 		responseObserver.onNext(response);
         responseObserver.onCompleted();
 	}
+	
+	@Override
+	public StreamObserver<LightSettingRequest> adjustLightSetting(final StreamObserver<LightSettingResponse> responseObserver) {
+		return new StreamObserver<LightSettingRequest>() {
+			//initialising variable to handle input
+			int setting = 0;
+			
+			public void onNext(LightSettingRequest lsr) {
+				// set the variable equal to the value of the incoming request
+				setting = lsr.getSetting();
+				System.out.println("Request recieved to adjust lights to: " + setting);
+			}
+			
+			public void onError(Throwable t) {
+				t.printStackTrace();
+			}
+			// build the response using the setting variable
+			public void onCompleted() {
+				LightSettingResponse response = LightSettingResponse.newBuilder().setSetting(setting).build();
+				responseObserver.onCompleted();
+			}
+		};
+	}
+	
+	@Override
+	public void switchHeatPower(HeatPowerRequest request, StreamObserver<HeatPowerResponse> responseObserver) {
+		// notification that the method has been invoked
+		System.out.println("Receiving a request for aircon system power!");
+		
+		// get the hpower boolean defined in the HeatPowerRequest.java file
+		boolean hpower = request.getHpower();
+		
+		// if the value is true the aircon system is on, otherwise its off
+		if(hpower) {
+			System.out.println("Turning aircon system on...");
+		}
+		else {
+			System.out.println("Turning aircon system off...");
+		}
+		
+		HeatPowerResponse response = HeatPowerResponse.newBuilder().setHpower(hpower).build();
+		
+		responseObserver.onNext(response);
+        responseObserver.onCompleted();
+	}
+	
 }
