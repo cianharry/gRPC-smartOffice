@@ -102,4 +102,25 @@ public class UtilitiesServer extends UtilitiesServiceImplBase {
         responseObserver.onCompleted();
 	}
 	
+	@Override
+	public void selectHeatTemp(HeatTempRequest request, StreamObserver<HeatTempResponse> responseObserver) {
+		int temp = request.getTemp();
+		
+		System.out.println("Request recieved to set office aircon to "+temp+" °C");
+		
+		HeatTempResponse response = HeatTempResponse.newBuilder().setTemp(temp-4).build();
+		HeatTempResponse response1 = HeatTempResponse.newBuilder().setTemp(temp-3).build();
+		HeatTempResponse response2 = HeatTempResponse.newBuilder().setTemp(temp-2).build();
+		HeatTempResponse response3 = HeatTempResponse.newBuilder().setTemp(temp-1).build();
+		HeatTempResponse response4 = HeatTempResponse.newBuilder().setTemp(temp).build();
+		
+		responseObserver.onNext(response);
+		responseObserver.onNext(response1);
+		responseObserver.onNext(response2);
+		responseObserver.onNext(response3);
+		responseObserver.onNext(response4);
+		
+        responseObserver.onCompleted();
+	}
+	
 }

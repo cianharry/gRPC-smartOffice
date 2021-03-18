@@ -18,12 +18,14 @@ public class UtilitiesClient {
 		blockingStub = UtilitiesServiceGrpc.newBlockingStub(channel);
 		asyncStub = UtilitiesServiceGrpc.newStub(channel);
 		
-		switchHeatPower();
+		
 		switchLightPower();
 		adjustLightSetting();
+		switchHeatPower();
+		selectHeatTemp();
 	}
 	
-	// UNARY RPC
+	// [1] UNARY RPC
 	public static void switchLightPower() {
 		
 		// Create Request message for use within the main method
@@ -39,7 +41,7 @@ public class UtilitiesClient {
 		}
 	}
 	
-	// CLIENT STREAMING RPC
+	// [2] CLIENT STREAMING RPC
 	public static void adjustLightSetting() {
 		
 		StreamObserver<LightSettingResponse> responseObserver = new StreamObserver<LightSettingResponse>() {
@@ -84,11 +86,11 @@ public class UtilitiesClient {
 		requestObserver.onCompleted();
 	}
 	
-	// UNARY RPC
+	// [1] UNARY RPC
 	public static void switchHeatPower() {
 		
 		// Create Request message for use within the main method
-		HeatPowerRequest heatpowerequest = HeatPowerRequest.newBuilder().setHpower(false).build();
+		HeatPowerRequest heatpowerequest = HeatPowerRequest.newBuilder().setHpower(true).build();
 		
 		HeatPowerResponse heatpowerresponse = blockingStub.switchHeatPower(heatpowerequest);
 		
@@ -99,4 +101,42 @@ public class UtilitiesClient {
 			System.out.println("Aircon system has been turned off...");
 		}
 	}
+	
+	// [3] Server-streaming RPC
+	public static void selectHeatTemp() {
+		
+		HeatTempRequest request = HeatTempRequest.newBuilder().setTemp(18).build();
+		
+		System.out.println("Requesting to set office aircon to "+request+" °C");
+		
+		StreamObserver<HeatTempResponse> responseObserver = new StreamObserver<HeatTempResponse>() {
+			
+			@Override
+			public void onNext(HeatTempResponse htr) {
+				System.out.println("Temperature currently: " + htr.getTemp() + " °C");
+
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				t.printStackTrace();
+
+			}
+
+			@Override
+			public void onCompleted() {
+				System.out.println("Office temperature has reached the selected level: "+request.getTemp()+" °C");
+			}
+		};
+		
+		asyncStub.selectHeatTemp(request, responseObserver);
+		
+		try {
+			Thread.sleep(30000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 }
