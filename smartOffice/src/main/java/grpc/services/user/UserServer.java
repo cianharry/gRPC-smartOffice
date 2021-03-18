@@ -10,7 +10,7 @@ import io.grpc.stub.StreamObserver;
 public class UserServer extends UserServiceImplBase{
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
+		// configuration of the auth server
 		System.out.println("Starting gRPC User Auth Server");
 		UserServer userserver = new UserServer();
 
@@ -25,7 +25,7 @@ public class UserServer extends UserServiceImplBase{
 			System.out.println("Server started with Port:" + server.getPort());
 		    server.awaitTermination();
 
-		}//try
+		}// error handling
 		catch(IOException e){
 			e.printStackTrace();
 		}
@@ -33,11 +33,11 @@ public class UserServer extends UserServiceImplBase{
 			e.printStackTrace();
 		}
 
-	}//main
+	}
 
 	@Override
 	public void login(LoginRequest request, StreamObserver<LoginResponse> responseObserver) {
-		System.out.println("Inside UserService::Login()");
+		System.out.println("Authenticating user credentials");
 		String username = request.getUsername();
 		String password = request.getPassword();
 
@@ -46,11 +46,11 @@ public class UserServer extends UserServiceImplBase{
 
 		if(username.equals("Cian") && password.equals("Dublin")) {
 			// return Success response
-			response.setResponseCode(1).setResponseMessage(username + ".....Successfully logged in");
+			response.setResponseCode(1).setResponseMessage(username + "User authenticated...");
 		}
 		else {
 			// return Failure response
-			response.setResponseCode(99).setResponseMessage(username + "... Sorry Login Failed");
+			response.setResponseCode(99).setResponseMessage(username + "User credentials are invalid...");
 		}
 
 		responseObserver.onNext(response.build());
@@ -62,7 +62,7 @@ public class UserServer extends UserServiceImplBase{
 
 	@Override
 	public void logout(LogoutRequest request, StreamObserver<LogoutResponse> responseObserver) {
-		System.out.println("Inside UserService::Logout()");
+		System.out.println("Attempting to logout user...");
 		String username = request.getUsername();
 
 		LogoutResponse.Builder response = LogoutResponse.newBuilder();

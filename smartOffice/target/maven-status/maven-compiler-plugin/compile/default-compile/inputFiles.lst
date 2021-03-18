@@ -9,6 +9,7 @@
 /Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/LoginRequest.java
 /Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/LightPowerRequest.java
 /Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/LoginResponseOrBuilder.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/UtilitiesClient.java
 /Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/LightPowerRequestOrBuilder.java
 /Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/UserServiceGrpc.java
 /Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/UserServiceImpl.java
@@ -30,3 +31,4 @@
 /Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/LightSettingResponse.java
 /Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/LogoutRequest.java
 /Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/user/LoginResponse.java
+/Users/Harry/Documents/NCI_Year_4/Semester2/Distributed Systems/gRPC_smartOffice_Master/smartOffice/src/main/java/grpc/services/utilities/UtilitiesServer.java

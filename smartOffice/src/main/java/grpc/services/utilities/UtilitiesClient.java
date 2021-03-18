@@ -1,6 +1,14 @@
 package grpc.services.utilities;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Random;
+
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceEvent;
+import javax.jmdns.ServiceInfo;
+import javax.jmdns.ServiceListener;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -11,6 +19,29 @@ public class UtilitiesClient {
 	private static UtilitiesServiceGrpc.UtilitiesServiceBlockingStub blockingStub;
 	private static UtilitiesServiceGrpc.UtilitiesServiceStub asyncStub;
 	
+	public static class Listener implements ServiceListener {
+        @Override
+        public void serviceAdded(ServiceEvent serviceEvent) {
+            System.out.println("Service added: " + serviceEvent.getInfo());
+        }
+
+        @Override
+        public void serviceRemoved(ServiceEvent serviceEvent) {
+            System.out.println("Service removed: " + serviceEvent.getInfo());
+        }
+
+        @Override
+        public void serviceResolved(ServiceEvent serviceEvent) {
+            System.out.println("Service resolved: " + serviceEvent.getInfo());
+            ServiceInfo info = serviceEvent.getInfo();
+            int Port = serviceEvent.getInfo().getPort();
+            String address = info.getHostAddresses()[0];
+            //String address = "localhost";
+            
+            
+        }
+    }
+	
 	public static void main(String[] args) throws Exception {
 		
 		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50051).usePlaintext().build();
@@ -18,12 +49,26 @@ public class UtilitiesClient {
 		blockingStub = UtilitiesServiceGrpc.newBlockingStub(channel);
 		asyncStub = UtilitiesServiceGrpc.newStub(channel);
 		
+		try {
+			// Create a JmDNS instance
+			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
+
+			// Add a service listener
+			jmdns.addServiceListener("_utilities._tcp.local.", new Listener());
+
+		} catch (UnknownHostException e) {
+			System.out.println(e.getMessage());
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
 		
 		switchLightPower();
 		adjustLightSetting();
 		switchHeatPower();
 		selectHeatTemp();
 	}
+	
+	
 	
 	// [1] UNARY RPC
 	public static void switchLightPower() {

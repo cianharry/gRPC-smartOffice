@@ -1,6 +1,11 @@
 package grpc.services.utilities;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceInfo;
 
 import grpc.services.utilities.UtilitiesServiceGrpc.UtilitiesServiceImplBase;
 import io.grpc.Server;
@@ -10,8 +15,8 @@ import io.grpc.stub.StreamObserver;
 public class UtilitiesServer extends UtilitiesServiceImplBase {
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
-		
-		System.out.println("Starting gRPC Utilities Server");
+		/*
+		 	System.out.println("Starting gRPC Utilities Server");
 		UtilitiesServer utilitiesserver = new UtilitiesServer();
 		
 		int port = 50051;
@@ -32,7 +37,29 @@ public class UtilitiesServer extends UtilitiesServiceImplBase {
 		catch(InterruptedException e) {
 			e.printStackTrace();
 		}
-	
+		 */
+		try {
+			int PORT = 50051;
+			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
+			
+			// Register utilities service
+	        ServiceInfo serviceInfo = ServiceInfo.create("_utilities._tcp.local.", "utilities", PORT, "Utilities server gives you access to lighting and air conditioning");
+	        jmdns.registerService(serviceInfo);
+	        UtilitiesServer utServer = new UtilitiesServer();
+	        Server server = ServerBuilder.forPort(PORT)
+                    .addService(utServer)
+                    .build()
+                    .start();
+            System.out.println("Utilities server started, listening on " + PORT);
+            server.awaitTermination();
+		} catch (UnknownHostException e) {
+			System.out.println(e.getMessage());
+            e.printStackTrace();
+		} catch (IOException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+		
 	}
 	
 	@Override

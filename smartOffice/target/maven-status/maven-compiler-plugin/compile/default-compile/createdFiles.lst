@@ -4,6 +4,7 @@ grpc/services/utilities/UtilitiesServiceGrpc$UtilitiesServiceFileDescriptorSuppl
 grpc/services/user/LogoutResponse$1.class
 grpc/services/user/LogoutResponseOrBuilder.class
 grpc/services/user/Empty.class
+grpc/services/utilities/UtilitiesServer.class
 grpc/services/utilities/HeatPowerRequestOrBuilder.class
 grpc/services/utilities/HeatPowerRequest.class
 grpc/services/utilities/LightPowerResponseOrBuilder.class
@@ -36,6 +37,8 @@ grpc/services/utilities/LightPowerResponse$Builder.class
 grpc/services/utilities/UtilitiesServiceGrpc$UtilitiesServiceStub.class
 grpc/services/utilities/UtilitiesServiceGrpc$UtilitiesServiceMethodDescriptorSupplier.class
 grpc/services/user/LogoutRequest$Builder.class
+grpc/services/utilities/UtilitiesServer$1.class
+grpc/services/utilities/UtilitiesClient$1.class
 grpc/services/user/UserServiceGrpc.class
 grpc/services/utilities/HeatPowerRequest$1.class
 grpc/services/utilities/HeatTempRequest$Builder.class
@@ -53,8 +56,10 @@ grpc/services/user/LoginRequestOrBuilder.class
 grpc/services/user/LogoutRequest$1.class
 grpc/services/utilities/LightSettingResponseOrBuilder.class
 grpc/services/utilities/UtilitiesServiceGrpc$UtilitiesServiceBlockingStub.class
+grpc/services/utilities/UtilitiesClient.class
 grpc/services/utilities/LightPowerRequestOrBuilder.class
 grpc/services/utilities/LightPowerResponse$1.class
+grpc/services/utilities/UtilitiesClient$2.class
 grpc/services/user/LoginRequest$Builder.class
 grpc/services/user/UserServiceGrpc$MethodHandlers.class
 grpc/services/user/Empty$Builder.class

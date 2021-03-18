@@ -13,44 +13,30 @@ public class UserClient {
 
 		blockingStub = UserServiceGrpc.newBlockingStub(channel);
 
-		//Create Request messages for use within the main method
-		LoginRequest loginRequest = LoginRequest.newBuilder().setUsername("Cian").setPassword("Dublin").build();
-		LogoutRequest logoutRequest = LogoutRequest.newBuilder().setUsername("Cian").build();
 
-		//Call the login RPC from within main
-		LoginResponse response = blockingStub.login(loginRequest);
-		System.out.println("Response from Server: " + response);
-
-		//Call the logout RPC from within main
-		//LogoutResponse responseOut = blockingStub.logout(logoutRequest);
-		//System.out.println("Response from Server: " + responseOut);
-
-		//Call the login RPC from login() method
-		//login();
-
-		//Call the logout RPC from logout() method
-		//logout();
+		login();
+		logout();
 	}
 
 	//Login
 	public static void login() {
-		System.out.println("Inside Login in Client: ");
+		System.out.println("Inside Login Client: ");
 
 		LoginRequest loginRequest = LoginRequest.newBuilder().setUsername("Cian").setPassword("Dublin").build();
 
 		LoginResponse response = blockingStub.login(loginRequest);
 
-		System.out.println("Response from Server: " + response);
+		System.out.println(response);
 	}
 
 	//Logout
 	public static void logout() {
-		System.out.println("Inside Logout in Client: ");
+		System.out.println("Inside Logout Client: ");
 
 		LogoutRequest logoutRequest = LogoutRequest.newBuilder().setUsername("Cian").build();
 
 		LogoutResponse response = blockingStub.logout(logoutRequest);
 
-		System.out.println("Response from Server: " + response);
+		System.out.println(response);
 	}
 }
