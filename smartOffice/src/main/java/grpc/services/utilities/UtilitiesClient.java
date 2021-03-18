@@ -107,13 +107,13 @@ public class UtilitiesClient {
 		
 		HeatTempRequest request = HeatTempRequest.newBuilder().setTemp(18).build();
 		
-		System.out.println("Requesting to set office aircon to "+request+" °C");
+		System.out.println("Requesting to set office aircon to "+request.getTemp()+"°C");
 		
-		StreamObserver<HeatTempResponse> responseObserver = new StreamObserver<HeatTempResponse>() {
+		StreamObserver<HeatTempResponse> responseObserverHeat = new StreamObserver<HeatTempResponse>() {
 			
 			@Override
 			public void onNext(HeatTempResponse htr) {
-				System.out.println("Temperature currently: " + htr.getTemp() + " °C");
+				System.out.println("Temperature currently: " + htr.getTemp() + "°C");
 
 			}
 
@@ -125,11 +125,11 @@ public class UtilitiesClient {
 
 			@Override
 			public void onCompleted() {
-				System.out.println("Office temperature has reached the selected level: "+request.getTemp()+" °C");
+				System.out.println("Office temperature has reached the selected level: "+request.getTemp()+"°C");
 			}
 		};
 		
-		asyncStub.selectHeatTemp(request, responseObserver);
+		asyncStub.selectHeatTemp(request, responseObserverHeat);
 		
 		try {
 			Thread.sleep(30000);

@@ -75,6 +75,7 @@ public class UtilitiesServer extends UtilitiesServiceImplBase {
 			// build the response using the setting variable
 			public void onCompleted() {
 				LightSettingResponse response = LightSettingResponse.newBuilder().setSetting(setting).build();
+				responseObserver.onNext(response);
 				responseObserver.onCompleted();
 			}
 		};
@@ -103,10 +104,10 @@ public class UtilitiesServer extends UtilitiesServiceImplBase {
 	}
 	
 	@Override
-	public void selectHeatTemp(HeatTempRequest request, StreamObserver<HeatTempResponse> responseObserver) {
+	public void selectHeatTemp(HeatTempRequest request, StreamObserver<HeatTempResponse> responseObserverHeat) {
 		int temp = request.getTemp();
 		
-		System.out.println("Request recieved to set office aircon to "+temp+" °C");
+		System.out.println("Request recieved to set office aircon to "+temp+"°C");
 		
 		HeatTempResponse response = HeatTempResponse.newBuilder().setTemp(temp-4).build();
 		HeatTempResponse response1 = HeatTempResponse.newBuilder().setTemp(temp-3).build();
@@ -114,13 +115,13 @@ public class UtilitiesServer extends UtilitiesServiceImplBase {
 		HeatTempResponse response3 = HeatTempResponse.newBuilder().setTemp(temp-1).build();
 		HeatTempResponse response4 = HeatTempResponse.newBuilder().setTemp(temp).build();
 		
-		responseObserver.onNext(response);
-		responseObserver.onNext(response1);
-		responseObserver.onNext(response2);
-		responseObserver.onNext(response3);
-		responseObserver.onNext(response4);
+		responseObserverHeat.onNext(response);
+		responseObserverHeat.onNext(response1);
+		responseObserverHeat.onNext(response2);
+		responseObserverHeat.onNext(response3);
+		responseObserverHeat.onNext(response4);
 		
-        responseObserver.onCompleted();
+		responseObserverHeat.onCompleted();
 	}
 	
 }
