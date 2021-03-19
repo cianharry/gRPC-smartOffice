@@ -1,6 +1,11 @@
 package grpc.services.user;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceInfo;
 
 import grpc.services.user.UserServiceGrpc.UserServiceImplBase;
 import io.grpc.Server;
@@ -10,30 +15,31 @@ import io.grpc.stub.StreamObserver;
 public class UserServer extends UserServiceImplBase{
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		// configuration of the auth server
+		// configuration of the user auth server
 		System.out.println("Starting gRPC User Auth Server");
-		UserServer userserver = new UserServer();
-
-		int port = 50051;
-
+	
 		try {
-			Server server = ServerBuilder.forPort(port)
-					.addService(userserver)
-					.build()
-					.start();
-
-			System.out.println("Server started with Port:" + server.getPort());
-		    server.awaitTermination();
-
-		}// error handling
-		catch(IOException e){
-			e.printStackTrace();
+			int PORT = 50050;
+			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
+			
+			// Register utilities service
+	        ServiceInfo serviceInfo = ServiceInfo.create("user._tcp.local.", "user", PORT, "User server authenticates employees");
+	        jmdns.registerService(serviceInfo);
+	        UserServer userServer = new UserServer();
+	        Server server = ServerBuilder.forPort(PORT)
+	                .addService(userServer)
+	                .build()
+	                .start();
+	        System.out.println("User authentication server started, listening on " + PORT);
+	        server.awaitTermination();
+		} catch (UnknownHostException e) {
+			System.out.println(e.getMessage());
+	        e.printStackTrace();
+		} catch (IOException e) {
+	        System.out.println(e.getMessage());
+	        e.printStackTrace();
 		}
-		catch(InterruptedException e) {
-			e.printStackTrace();
-		}
-
-	}
+    }
 
 	@Override
 	public void login(LoginRequest request, StreamObserver<LoginResponse> responseObserver) {
@@ -46,11 +52,11 @@ public class UserServer extends UserServiceImplBase{
 
 		if(username.equals("Cian") && password.equals("Dublin")) {
 			// return Success response
-			response.setResponseCode(1).setResponseMessage(username + "User authenticated...");
+			response.setResponseCode(1).setResponseMessage(username + " -> User authenticated...");
 		}
 		else {
 			// return Failure response
-			response.setResponseCode(99).setResponseMessage(username + "User credentials are invalid...");
+			response.setResponseCode(99).setResponseMessage(username + " -> User credentials are invalid...");
 		}
 
 		responseObserver.onNext(response.build());

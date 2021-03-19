@@ -34,7 +34,7 @@ public class UtilitiesClient {
         public void serviceResolved(ServiceEvent serviceEvent) {
             System.out.println("Service resolved: " + serviceEvent.getInfo());
             ServiceInfo info = serviceEvent.getInfo();
-            int Port = serviceEvent.getInfo().getPort();
+            final int Port = serviceEvent.getInfo().getPort();
             String address = info.getHostAddresses()[0];
             //String address = "localhost";
             
