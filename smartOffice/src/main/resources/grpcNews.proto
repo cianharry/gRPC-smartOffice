@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "grpc.services.news";
+option java_outer_classname = "NewsServiceImpl";
+
+package news;
+
+service NewsService{
+	
+	// Unary RPC
+	rpc switchNewsPower(NewsPowerRequest) returns (NewsPowerResponse) {}
+	
+	// Bidirectional streaming RPC
+	rpc streamNews(stream NewsStreamRequest) returns (stream NewsStreamResponse) {}
+	
+}
+
+message NewsPowerRequest {
+	bool npower = 1;
+}
+
+message NewsPowerResponse {
+	bool npower = 1;
+} 
+
+message NewsStreamRequest {
+	string content = 1;
+}
+
+message NewsStreamResponse {
+	string content = 1;
+}

@@ -93,7 +93,7 @@ public class UtilitiesClient {
 			
 			@Override
 			public void onNext(LightSettingResponse lsr) {
-				System.out.println("Ligthing has been adjusted to level " + lsr.getSetting());
+				
 			}
 			@Override
 			public void onError(Throwable t) {
@@ -101,7 +101,7 @@ public class UtilitiesClient {
 			}
 			@Override
 			public void onCompleted() {
-
+				System.out.println("Lights set");
 			}
 		};
 		
