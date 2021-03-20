@@ -63,5 +63,29 @@ public class NewsServer extends NewsServiceImplBase {
         responseObserver.onCompleted();
 	}
 	
+	@Override
+	public StreamObserver<NewsStreamRequest> streamNews(StreamObserver<NewsStreamResponse> responseObserver) {
+		return new StreamObserver<NewsStreamRequest>() {
+			 @Override
+	            public void onNext(NewsStreamRequest value) {
+	                StringBuilder sb = new StringBuilder(value.getContent());
+	                System.out.println("Building News Stream: " + value.getContent());
+	                
+	                NewsStreamResponse res = NewsStreamResponse.newBuilder().setContent(sb.toString()).build();
+	                responseObserver.onNext(res);
+	            }
 
+	            @Override
+	            public void onError(Throwable t) {
+	                System.out.println("Error: " + t.getMessage());
+	                t.printStackTrace();
+	            }
+
+	            @Override
+	            public void onCompleted() {
+	                responseObserver.onCompleted();
+	            }
+		};
+	}
+	
 }

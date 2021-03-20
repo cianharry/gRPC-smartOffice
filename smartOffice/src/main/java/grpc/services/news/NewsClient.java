@@ -3,17 +3,15 @@ package grpc.services.news;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
+import javax.swing.JOptionPane;
 
-import grpc.services.utilities.LightPowerRequest;
-import grpc.services.utilities.LightPowerResponse;
-import grpc.services.utilities.UtilitiesServiceGrpc;
-import grpc.services.utilities.UtilitiesClient.Listener;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -64,6 +62,7 @@ public class NewsClient {
 		}
 		
 		switchNewsPower();
+		streamNews();
 	}
 	
 	// [1] UNARY RPC
@@ -75,12 +74,60 @@ public class NewsClient {
 		NewsPowerResponse newspowerresponse = blockingStub.switchNewsPower(newspowerequest);
 		
 		if(newspowerresponse.getNpower()) {
-			System.out.println("News Stream activated...");
+			System.out.println("\nNews Stream activated...");
 		}
 		else {
-			System.out.println("News stream de-activated...");
+			System.out.println("\nNews stream de-activated...");
 		}
 	}
 	
+	// [4] BIDIRECTIONAL RPC
+	public static void streamNews() {
+		
+		ArrayList<String> newsContents = new ArrayList<>();
+		 
+       StreamObserver<NewsStreamResponse> responseObserver = new StreamObserver<NewsStreamResponse>() {
+           @Override
+           public void onNext(NewsStreamResponse nsr) {
+               System.out.println("> gathering... "+nsr.getContent());
+               newsContents.add(nsr.getContent());
+           }
 
+           @Override
+           public void onError(Throwable t) {
+               System.out.println("Error: " + t.getMessage());
+               t.printStackTrace();
+           }
+
+           @Override
+           public void onCompleted() {
+        	   System.out.println("\nNews Headlines: " + newsContents.size());
+               for(String content : newsContents) {
+               	System.out.println("> " + content);
+                   JOptionPane.showMessageDialog(null, content);
+               }
+               System.out.println("\nNews Headline Streaming completed");
+           }
+       };
+       
+       StreamObserver<NewsStreamRequest> requestObserver = asyncStub.streamNews(responseObserver);
+       
+       try {
+    	   requestObserver.onNext(NewsStreamRequest.newBuilder().setContent("Nasdaq index has fallen by 2.1% overnight").build());
+    	   requestObserver.onNext(NewsStreamRequest.newBuilder().setContent("FTSE 100 index increased 0.7% overnight").build());
+    	   requestObserver.onNext(NewsStreamRequest.newBuilder().setContent("Dow Jones Industrial Avergae at an all time low").build());
+    	   
+    	   Thread.sleep(new Random().nextInt(1000) + 500);
+    	   
+       } catch (RuntimeException e) {
+			requestObserver.onError(e);
+			throw e;
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		}
+           
+        requestObserver.onCompleted();
+        
+	}
+	
 }

@@ -101,7 +101,7 @@ public class UtilitiesClient {
 			}
 			@Override
 			public void onCompleted() {
-				System.out.println("Lights set");
+				System.out.println("Lights set [slider value]");
 			}
 		};
 		
