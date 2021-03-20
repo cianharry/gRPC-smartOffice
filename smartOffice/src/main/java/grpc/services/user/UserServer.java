@@ -16,14 +16,14 @@ public class UserServer extends UserServiceImplBase{
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		// configuration of the user auth server
-		System.out.println("Starting gRPC User Auth Server");
+		System.out.println("Starting gRPC User Authentication Server");
 	
 		try {
 			int PORT = 50050;
 			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
 			
-			// Register utilities service
-	        ServiceInfo serviceInfo = ServiceInfo.create("user._tcp.local.", "user", PORT, "User server authenticates employees");
+			// Create & Register user authentication service using jmDNS
+	        ServiceInfo serviceInfo = ServiceInfo.create("_user._tcp.local.", "user", PORT, "User server authenticates employees");
 	        jmdns.registerService(serviceInfo);
 	        UserServer userServer = new UserServer();
 	        Server server = ServerBuilder.forPort(PORT)
@@ -48,7 +48,8 @@ public class UserServer extends UserServiceImplBase{
 		String password = request.getPassword();
 
 		LoginResponse.Builder response = LoginResponse.newBuilder();
-		System.out.println("username = " + username + ", password = " + password);
+		System.out.println("username: " + username);
+		System.out.println("password: " + password);
 
 		if(username.equals("Cian") && password.equals("Dublin")) {
 			// return Success response
@@ -88,4 +89,4 @@ public class UserServer extends UserServiceImplBase{
 		responseObserver.onCompleted();
 	}
 
-}//class
+}

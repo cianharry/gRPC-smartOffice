@@ -16,11 +16,13 @@ public class NewsServer extends NewsServiceImplBase {
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
 		
+		// configuration of the user auth server
+		System.out.println("Starting gRPC News Streaming Server");
 		try {
 			int PORT = 50052;
 			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
 			
-			// Register news service
+			// Create & Register news streaming service using jmDNS
 	        ServiceInfo serviceInfo = ServiceInfo.create("_news._tcp.local.", "news", PORT, "News server gives you access to the latest financial news headlines");
 	        jmdns.registerService(serviceInfo);
 	        NewsServer newsServer = new NewsServer();

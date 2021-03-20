@@ -15,34 +15,14 @@ import io.grpc.stub.StreamObserver;
 public class UtilitiesServer extends UtilitiesServiceImplBase {
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
-		/*
-		 	System.out.println("Starting gRPC Utilities Server");
-		UtilitiesServer utilitiesserver = new UtilitiesServer();
 		
-		int port = 50051;
+		System.out.println("Starting gRPC Utilities Server");
 		
-		try {
-			Server server = ServerBuilder.forPort(port)
-					.addService(utilitiesserver)
-					.build()
-					.start();
-
-			System.out.println("Server started with Port:" + server.getPort());
-		    server.awaitTermination();
-
-		}//try
-		catch(IOException e){
-			e.printStackTrace();
-		}
-		catch(InterruptedException e) {
-			e.printStackTrace();
-		}
-		 */
 		try {
 			int PORT = 50051;
 			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
 			
-			// Register utilities service
+			// Create & Register utilities service
 	        ServiceInfo serviceInfo = ServiceInfo.create("_utilities._tcp.local.", "utilities", PORT, "Utilities server gives you access to lighting and air conditioning");
 	        jmdns.registerService(serviceInfo);
 	        UtilitiesServer utServer = new UtilitiesServer();
@@ -52,6 +32,7 @@ public class UtilitiesServer extends UtilitiesServiceImplBase {
                     .start();
             System.out.println("Utilities server started, listening on " + PORT);
             server.awaitTermination();
+            
 		} catch (UnknownHostException e) {
 			System.out.println(e.getMessage());
             e.printStackTrace();
