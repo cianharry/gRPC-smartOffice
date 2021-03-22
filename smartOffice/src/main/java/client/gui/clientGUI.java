@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
@@ -37,6 +38,8 @@ import grpc.services.user.UserClient;
 import grpc.services.user.UserServiceGrpc;
 import grpc.services.utilities.HeatPowerRequest;
 import grpc.services.utilities.HeatPowerResponse;
+import grpc.services.utilities.HeatTempRequest;
+import grpc.services.utilities.HeatTempResponse;
 import grpc.services.utilities.LightPowerRequest;
 import grpc.services.utilities.LightPowerResponse;
 import grpc.services.utilities.LightSettingRequest;
@@ -49,10 +52,10 @@ import io.grpc.stub.StreamObserver;
 public class clientGUI implements ActionListener {
 	
 	private static JTextField usernameTF, passwordTF;
-	private static JTextArea loginResponseTA, lightingResponseTA, newsResponseTA;
-	private JTextField entry2, reply2;
-	private JTextField entry3, reply3;
-	private JTextField entry4, reply4;
+	private static JTextArea loginResponseTA, lightingResponseTA, newsResponseTA, heatResponseTA;
+	private static JTextField lightsTF, lightsResponseTF;
+	private static JTextField HeatTF;
+	private static JSlider lightSlider;
 	
 	private static int userPort, utilitiesPort, newsPort = 0;
 	private static String host = "localhost";
@@ -63,6 +66,9 @@ public class clientGUI implements ActionListener {
 	private static UtilitiesServiceGrpc.UtilitiesServiceStub utilAsyncStub;
 	private static NewsServiceGrpc.NewsServiceBlockingStub newsBlockingStub;
 	private static NewsServiceGrpc.NewsServiceStub newsAsyncStub;
+	private static final int MIN = 0;
+	private static final int MAX = 10;
+	private static final int DEFAULT = 4;
 	
 	public static class Listener implements ServiceListener {
         @Override
@@ -130,18 +136,11 @@ public class clientGUI implements ActionListener {
 
 	}
 
-	private JPanel getUtilitiesPanel() {
+	private JPanel getLightsPanel() {
 
 		JPanel panel = new JPanel();
 
 		BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.X_AXIS);
-
-		JLabel label = new JLabel("Enter value")	;
-		panel.add(label);
-		panel.add(Box.createRigidArea(new Dimension(10, 0)));
-		entry2 = new JTextField("",10);
-		panel.add(entry2);
-		panel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 		JButton LightsOnBtn = new JButton("Lights On");
 		LightsOnBtn.addActionListener(this);
@@ -152,10 +151,70 @@ public class clientGUI implements ActionListener {
 		LightsOffBtn.addActionListener(this);
 		panel.add(LightsOffBtn);
 		panel.add(Box.createRigidArea(new Dimension(10, 0)));
+		
+		JLabel LightsLB = new JLabel("Lights setting: ");
+		panel.add(LightsLB);
+		panel.add(Box.createRigidArea(new Dimension(10, 0)));
+
+		//initial light slider settings
+		lightSlider = new JSlider(JSlider.HORIZONTAL,MIN, MAX, DEFAULT);
+		//Turn on labels at major tick marks.
+		lightSlider.setMajorTickSpacing(10);
+		lightSlider.setMinorTickSpacing(1);
+		lightSlider.setPaintTicks(true);
+		lightSlider.setPaintLabels(true);
+		
+		panel.add(lightSlider);
+		panel.add(Box.createRigidArea(new Dimension(10, 0)));
+		
+		JButton LightsSettingBtn = new JButton("Confirm");
+		LightsSettingBtn.addActionListener(this);
+		panel.add(LightsSettingBtn);
+		panel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 		lightingResponseTA = new JTextArea(0,10);
 		lightingResponseTA .setEditable(false);
 		panel.add(lightingResponseTA);
+
+		panel.setLayout(boxlayout);
+
+		return panel;
+
+	}
+	
+	private JPanel getHeatPanel() {
+
+		JPanel panel = new JPanel();
+
+		BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.X_AXIS);
+
+		
+
+		JButton LightsOnBtn = new JButton("Aircon On");
+		LightsOnBtn.addActionListener(this);
+		panel.add(LightsOnBtn);
+		panel.add(Box.createRigidArea(new Dimension(10, 0)));
+		
+		JButton LightsOffBtn = new JButton("Aircon Off");
+		LightsOffBtn.addActionListener(this);
+		panel.add(LightsOffBtn);
+		panel.add(Box.createRigidArea(new Dimension(10, 0)));
+		
+		JLabel HeatLB = new JLabel("Enter desired temp");
+		panel.add(HeatLB);
+		panel.add(Box.createRigidArea(new Dimension(10, 0)));
+		HeatTF = new JTextField("",10);
+		panel.add(HeatTF);
+		panel.add(Box.createRigidArea(new Dimension(10, 0)));
+		
+		JButton SelectHeatBtn = new JButton("Select");
+		SelectHeatBtn.addActionListener(this);
+		panel.add(SelectHeatBtn);
+		panel.add(Box.createRigidArea(new Dimension(10, 0)));
+
+		heatResponseTA = new JTextArea(0,10);
+		heatResponseTA .setEditable(false);
+		panel.add(heatResponseTA);
 
 		panel.setLayout(boxlayout);
 
@@ -213,7 +272,7 @@ public class clientGUI implements ActionListener {
 	
 	private void build() { 
 
-		JFrame frame = new JFrame("Smart Office Home");
+		JFrame frame = new JFrame("Smart Office Dashboard");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Set the panel to add buttons
@@ -228,11 +287,12 @@ public class clientGUI implements ActionListener {
 		panel.setBorder(new EmptyBorder(new Insets(50, 100, 50, 100)));
 	
 		panel.add(getLoginPanel());
-		panel.add(getUtilitiesPanel());
+		panel.add(getLightsPanel());
+		panel.add(getHeatPanel());
 		panel.add(getNewsPanel());
 
 		// Set size for the frame
-		frame.setSize(300, 500);
+		frame.setSize(500, 500);
 
 		// Set the window to be visible as the default to be false
 		frame.add(panel);
@@ -304,7 +364,7 @@ public class clientGUI implements ActionListener {
 		}
 	}
 	
-	public static void adjustLightSetting() {
+	public static void adjustLightSetting(int lightSetting) {
 		
 		StreamObserver<LightSettingResponse> responseObserver = new StreamObserver<LightSettingResponse>() {
 			
@@ -318,7 +378,7 @@ public class clientGUI implements ActionListener {
 			}
 			@Override
 			public void onCompleted() {
-				System.out.println("Lights set [slider value]");
+				System.out.println("Lights set at "+lightSetting);
 			}
 		};
 		
@@ -326,16 +386,7 @@ public class clientGUI implements ActionListener {
 		
 		try {
 			// simulation of request stream from the client
-			requestObserver.onNext(LightSettingRequest.newBuilder().setSetting(3).build());
-			System.out.println("3");
-			requestObserver.onNext(LightSettingRequest.newBuilder().setSetting(4).build());
-			System.out.println("4");
-			requestObserver.onNext(LightSettingRequest.newBuilder().setSetting(5).build());
-			System.out.println("5");
-			requestObserver.onNext(LightSettingRequest.newBuilder().setSetting(6).build());
-			System.out.println("6");
-			requestObserver.onNext(LightSettingRequest.newBuilder().setSetting(7).build());
-			System.out.println("7");
+			requestObserver.onNext(LightSettingRequest.newBuilder().setSetting(lightSetting).build());
 			
 			Thread.sleep(new Random().nextInt(1000) + 500);
 			
@@ -378,6 +429,44 @@ public class clientGUI implements ActionListener {
 		}
 		else {
 			System.out.println("Aircon system has been turned off...");
+		}
+	}
+	
+	// [3] Server-streaming RPC
+	public static void selectHeatTemp() {
+		
+		int heat = Integer.parseInt(HeatTF.getText().toString());
+		HeatTempRequest request = HeatTempRequest.newBuilder().setTemp(heat).build();
+		
+		System.out.println("Requesting to set office aircon to "+heat+"°C");
+		
+		StreamObserver<HeatTempResponse> responseObserverHeat = new StreamObserver<HeatTempResponse>() {
+			
+			@Override
+			public void onNext(HeatTempResponse htr) {
+				heatResponseTA.setText("Responding: "+htr.getTemp()+"°C");
+				System.out.println("Responding: "+htr.getTemp()+"°C");
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				t.printStackTrace();
+
+			}
+
+			@Override
+			public void onCompleted() {
+				System.out.println("Office temperature has reached the selected level: "+heat+"°C");
+				heatResponseTA.setText("Office temperature has reached the selected level: "+heat+"°C");
+			}
+		};
+		
+		utilAsyncStub.selectHeatTemp(request, responseObserverHeat);
+		
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -451,6 +540,7 @@ public class clientGUI implements ActionListener {
         
 	}
 	
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
@@ -479,7 +569,7 @@ public class clientGUI implements ActionListener {
 	        }
 		}
 		
-		if(label.equals("Lights On") || label.equals("Lights Off")) {
+		if(label.equals("Lights On") || label.equals("Lights Off") || label.equals("Aircon On") || label.equals("Aircon Off") || label.equals("Confirm") || label.equals("Select")){
 			System.out.println("\nUtilities microservice being invoked ...");
 			
 			try {
@@ -490,8 +580,20 @@ public class clientGUI implements ActionListener {
 				if (label.equals("Lights On")){
 					LightsOn();
 				}
-				else {
+				else if (label.equals("Lights Off")){
 					LightsOff();
+				}
+				else if (label.equals("Aircon On")){
+					HeatOn();
+				}
+				else if(label.equals("Aircon Off")) {
+					HeatOff();
+				}
+				else if(label.equals("Confirm")) {
+					adjustLightSetting(lightSlider.getValue());
+				}
+				else {
+					selectHeatTemp();
 				}
 				utilitiesChannel.shutdown();
 				
