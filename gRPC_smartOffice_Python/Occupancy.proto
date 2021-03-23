@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+
+service OccupancyService {
+    rpc checkOccupancy(OccupancyRequest) returns (OccupancyResponse) {}
+}
+
+message OccupancyRequest {
+    int32 floorNum = 1;
+}
+
+message OccupancyResponse {
+    string status = 2;
+}

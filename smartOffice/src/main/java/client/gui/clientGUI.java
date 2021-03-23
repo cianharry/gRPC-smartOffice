@@ -34,7 +34,6 @@ import grpc.services.user.LoginRequest;
 import grpc.services.user.LoginResponse;
 import grpc.services.user.LogoutRequest;
 import grpc.services.user.LogoutResponse;
-import grpc.services.user.UserClient;
 import grpc.services.user.UserServiceGrpc;
 import grpc.services.utilities.HeatPowerRequest;
 import grpc.services.utilities.HeatPowerResponse;
@@ -93,6 +92,10 @@ public class clientGUI implements ActionListener {
             }
         }
     }
+	
+	public clientGUI() {
+		
+	}
 	
 	
 
@@ -364,7 +367,7 @@ public class clientGUI implements ActionListener {
 		}
 	}
 	
-	public static void adjustLightSetting(int lightSetting) {
+	public static void adjustLightSetting() {
 		
 		StreamObserver<LightSettingResponse> responseObserver = new StreamObserver<LightSettingResponse>() {
 			
@@ -378,13 +381,26 @@ public class clientGUI implements ActionListener {
 			}
 			@Override
 			public void onCompleted() {
-				System.out.println("Lights set at "+lightSetting);
+				System.out.println("Lights set");
 			}
 		};
 		
 		StreamObserver<LightSettingRequest> requestObserver = utilAsyncStub.adjustLightSetting(responseObserver);
 		
+		boolean moving = lightSlider.getValueIsAdjusting();
+		int lightSetting = lightSlider.getValue();
+		
+		while(moving) {
+			requestObserver.onNext(LightSettingRequest.newBuilder().setSetting(lightSetting).build());
+		}
 		try {
+			Thread.sleep(new Random().nextInt(1000) + 500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		requestObserver.onCompleted();
+		/*
+		 * try {
 			// simulation of request stream from the client
 			requestObserver.onNext(LightSettingRequest.newBuilder().setSetting(lightSetting).build());
 			
@@ -396,7 +412,9 @@ public class clientGUI implements ActionListener {
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 		}
-		requestObserver.onCompleted();
+		 */
+		
+		
 	}
 	
 	
@@ -590,7 +608,7 @@ public class clientGUI implements ActionListener {
 					HeatOff();
 				}
 				else if(label.equals("Confirm")) {
-					adjustLightSetting(lightSlider.getValue());
+					adjustLightSetting();
 				}
 				else {
 					selectHeatTemp();
