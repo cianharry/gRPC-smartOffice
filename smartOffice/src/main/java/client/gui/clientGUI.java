@@ -24,6 +24,8 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import grpc.services.news.NewsPowerRequest;
 import grpc.services.news.NewsPowerResponse;
@@ -51,8 +53,8 @@ import io.grpc.stub.StreamObserver;
 public class clientGUI implements ActionListener {
 	
 	private static JTextField usernameTF, passwordTF;
-	private static JTextArea loginResponseTA, lightingResponseTA, newsResponseTA, heatResponseTA;
-	private static JTextField lightsTF, lightsResponseTF;
+	private static JTextField loginResponseTA, lightingResponseTA, lightsTF, lightsResponseTF;
+	private static JTextArea newsResponseTA, heatResponseTA;
 	private static JTextField HeatTF;
 	private static JSlider lightSlider;
 	
@@ -93,10 +95,6 @@ public class clientGUI implements ActionListener {
         }
     }
 	
-	public clientGUI() {
-		
-	}
-	
 	
 
 	private JPanel getLoginPanel() {
@@ -129,7 +127,7 @@ public class clientGUI implements ActionListener {
 		panel.add(LogoutBtn);
 		panel.add(Box.createRigidArea(new Dimension(10, 0)));
 
-		loginResponseTA = new JTextArea(0,10);
+		loginResponseTA = new JTextField("",20);
 		loginResponseTA .setEditable(false);
 		panel.add(loginResponseTA);
 
@@ -175,9 +173,11 @@ public class clientGUI implements ActionListener {
 		panel.add(LightsSettingBtn);
 		panel.add(Box.createRigidArea(new Dimension(10, 0)));
 
-		lightingResponseTA = new JTextArea(0,10);
+		lightingResponseTA = new JTextField("",20);
 		lightingResponseTA .setEditable(false);
 		panel.add(lightingResponseTA);
+		panel.add(Box.createRigidArea(new Dimension(10, 0)));
+
 
 		panel.setLayout(boxlayout);
 
@@ -215,7 +215,7 @@ public class clientGUI implements ActionListener {
 		panel.add(SelectHeatBtn);
 		panel.add(Box.createRigidArea(new Dimension(10, 0)));
 
-		heatResponseTA = new JTextArea(0,10);
+		heatResponseTA = new JTextArea(5, 15);
 		heatResponseTA .setEditable(false);
 		panel.add(heatResponseTA);
 
@@ -241,9 +241,10 @@ public class clientGUI implements ActionListener {
 		panel.add(NewsStreamBtn);
 		panel.add(Box.createRigidArea(new Dimension(20, 0)));
 
-		newsResponseTA = new JTextArea(0, 20);
+		newsResponseTA = new JTextArea(5, 15);
 		newsResponseTA .setEditable(false);
 		panel.add(newsResponseTA);
+		panel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 		panel.setLayout(boxlayout);
 
@@ -256,7 +257,7 @@ public class clientGUI implements ActionListener {
 		clientGUI gui = new clientGUI();
 
 		gui.build();
-		
+				
 		try {
             // create a JmDNS instance
             JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
@@ -287,7 +288,7 @@ public class clientGUI implements ActionListener {
 		panel.setLayout(boxlayout);
 
 		// Set border for the panel
-		panel.setBorder(new EmptyBorder(new Insets(50, 100, 50, 100)));
+		panel.setBorder(new EmptyBorder(new Insets(100, 200, 100, 200)));
 	
 		panel.add(getLoginPanel());
 		panel.add(getLightsPanel());
@@ -295,13 +296,15 @@ public class clientGUI implements ActionListener {
 		panel.add(getNewsPanel());
 
 		// Set size for the frame
-		frame.setSize(500, 500);
+		frame.setSize(600, 600);
 
 		// Set the window to be visible as the default to be false
 		frame.add(panel);
 		frame.pack();
 		frame.setVisible(true);
 	}
+	
+	
 	/*
 	 * --------------------------- USER AUTHENTICATION SERVICE --------------------------------------
 	 */
@@ -346,9 +349,11 @@ public class clientGUI implements ActionListener {
 		
 		if(lightpowerresponse.getLpower()) {
 			System.out.println("Lighting system has been turned on...");
+			lightingResponseTA.setText("Lighting system turned on");
 		}
 		else {
 			System.out.println("Lighting system has been turned off...");
+			lightingResponseTA.setText("Lighting system turned off");
 		}
 	}
 	
@@ -361,9 +366,11 @@ public class clientGUI implements ActionListener {
 		
 		if(lightpowerresponse.getLpower()) {
 			System.out.println("Lighting system has been turned on...");
+			lightingResponseTA.setText("Lighting system turned on");
 		}
 		else {
 			System.out.println("Lighting system has been turned off...");
+			lightingResponseTA.setText("Lighting system turned off");
 		}
 	}
 	
@@ -382,23 +389,33 @@ public class clientGUI implements ActionListener {
 			@Override
 			public void onCompleted() {
 				System.out.println("Lights set");
+				lightingResponseTA.setText("Choose again");
+				
 			}
 		};
 		
+		
 		StreamObserver<LightSettingRequest> requestObserver = utilAsyncStub.adjustLightSetting(responseObserver);
 		
-		boolean moving = lightSlider.getValueIsAdjusting();
-		int lightSetting = lightSlider.getValue();
-		
-		while(moving) {
-			requestObserver.onNext(LightSettingRequest.newBuilder().setSetting(lightSetting).build());
-		}
 		try {
+			// simulation of request stream from the client
+			int lightSetting = lightSlider.getValue();
+			requestObserver.onNext(LightSettingRequest.newBuilder().setSetting(lightSetting).build());
+			
 			Thread.sleep(new Random().nextInt(1000) + 500);
-		} catch (InterruptedException e) {
+			
+		} catch (RuntimeException e) {
+			requestObserver.onError(e);
+			throw e;
+		} catch(InterruptedException e) {
 			e.printStackTrace();
 		}
-		requestObserver.onCompleted();
+		
+		requestObserver.onCompleted();		
+		}
+		
+		
+		
 		/*
 		 * try {
 			// simulation of request stream from the client
@@ -414,8 +431,6 @@ public class clientGUI implements ActionListener {
 		}
 		 */
 		
-		
-	}
 	
 	
 	// 2. HEATING
@@ -429,9 +444,11 @@ public class clientGUI implements ActionListener {
 		
 		if(heatpowerresponse.getHpower()) {
 			System.out.println("Aircon system has been turned on...");
+			heatResponseTA.setText("Heating system turned on");
 		}
 		else {
 			System.out.println("Aircon system has been turned off...");
+			heatResponseTA.setText("Heating system turned off");
 		}
 	}
 	
@@ -444,9 +461,11 @@ public class clientGUI implements ActionListener {
 		
 		if(heatpowerresponse.getHpower()) {
 			System.out.println("Aircon system has been turned on...");
+			heatResponseTA.setText("Heating system turned on");
 		}
 		else {
 			System.out.println("Aircon system has been turned off...");
+			heatResponseTA.setText("Heating system turned off");
 		}
 	}
 	
@@ -462,7 +481,7 @@ public class clientGUI implements ActionListener {
 			
 			@Override
 			public void onNext(HeatTempResponse htr) {
-				heatResponseTA.setText("Responding: "+htr.getTemp()+"°C");
+				heatResponseTA.append("Responding: "+htr.getTemp()+"°C");
 				System.out.println("Responding: "+htr.getTemp()+"°C");
 			}
 
@@ -587,7 +606,7 @@ public class clientGUI implements ActionListener {
 	        }
 		}
 		
-		if(label.equals("Lights On") || label.equals("Lights Off") || label.equals("Aircon On") || label.equals("Aircon Off") || label.equals("Confirm") || label.equals("Select")){
+		if(label.equals("Lights On") || label.equals("Lights Off") || label.equals("Aircon On") || label.equals("Aircon Off") || label.equals("Select") || label.equals("Confirm")){
 			System.out.println("\nUtilities microservice being invoked ...");
 			
 			try {
