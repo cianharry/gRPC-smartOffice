@@ -15,9 +15,10 @@ import io.grpc.stub.StreamObserver;
 public class UserServer extends UserServiceImplBase{
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		// configuration of the user auth server
+
 		System.out.println("Starting gRPC User Authentication Server");
-	
+		
+		// Create & Register user service with jmDNS
 		try {
 			int PORT = 50050;
 			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
@@ -40,6 +41,12 @@ public class UserServer extends UserServiceImplBase{
 	        e.printStackTrace();
 		}
     }
+	
+	/*
+	 * ------------------------------------------- USER AUTH ------------------------------------------------------
+	 */
+	
+	//-------------------------------- Unary RPC implementation -------------------------------------------------
 
 	@Override
 	public void login(LoginRequest request, StreamObserver<LoginResponse> responseObserver) {
@@ -65,7 +72,7 @@ public class UserServer extends UserServiceImplBase{
 	}
 
 
-
+	//-------------------------------- Unary RPC implementation -------------------------------------------------
 
 	@Override
 	public void logout(LogoutRequest request, StreamObserver<LogoutResponse> responseObserver) {

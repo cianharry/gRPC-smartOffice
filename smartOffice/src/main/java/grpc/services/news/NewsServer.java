@@ -43,6 +43,12 @@ public class NewsServer extends NewsServiceImplBase {
         }
 	}
 	
+	/*
+	 * ------------------------------------------- NEWS ------------------------------------------------------
+	 */
+	
+	//-------------------------------- Unary RPC implementation -------------------------------------------------
+	
 	@Override
 	public void switchNewsPower(NewsPowerRequest request, StreamObserver<NewsPowerResponse> responseObserver) {
 		// notification that the method has been invoked
@@ -65,28 +71,31 @@ public class NewsServer extends NewsServiceImplBase {
         responseObserver.onCompleted();
 	}
 	
+	//-------------------------------- Bidirectional RPC Stream implementation -------------------------------------------------
+	
 	@Override
 	public StreamObserver<NewsStreamRequest> streamNews(StreamObserver<NewsStreamResponse> responseObserver) {
 		return new StreamObserver<NewsStreamRequest>() {
 			 @Override
-	            public void onNext(NewsStreamRequest value) {
-	                StringBuilder sb = new StringBuilder(value.getContent());
-	                System.out.println("Building News Stream: " + value.getContent());
-	                
-	                NewsStreamResponse res = NewsStreamResponse.newBuilder().setContent(sb.toString()).build();
-	                responseObserver.onNext(res);
-	            }
+            public void onNext(NewsStreamRequest value) {
+                StringBuilder sb = new StringBuilder(value.getContent());
+                System.out.println("Building News Stream: " + value.getContent());
+                
+                // The string builder is used to extract the request value and return the news stream to the client as headlines
+                NewsStreamResponse res = NewsStreamResponse.newBuilder().setContent(sb.toString()).build();
+                responseObserver.onNext(res); 
+            }
 
-	            @Override
-	            public void onError(Throwable t) {
-	                System.out.println("Error: " + t.getMessage());
-	                t.printStackTrace();
-	            }
+            @Override
+            public void onError(Throwable t) {
+                System.out.println("Error: " + t.getMessage());
+                t.printStackTrace();
+            }
 
-	            @Override
-	            public void onCompleted() {
-	                responseObserver.onCompleted();
-	            }
+            @Override
+            public void onCompleted() {
+                responseObserver.onCompleted();
+            }
 		};
 	}
 	

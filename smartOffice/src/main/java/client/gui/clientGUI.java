@@ -1,6 +1,8 @@
 package client.gui;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +11,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
@@ -24,8 +28,6 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import grpc.services.news.NewsPowerRequest;
 import grpc.services.news.NewsPowerResponse;
@@ -53,8 +55,8 @@ import io.grpc.stub.StreamObserver;
 public class clientGUI implements ActionListener {
 	
 	private static JTextField usernameTF, passwordTF;
-	private static JTextField loginResponseTA, lightingResponseTA, lightsTF, lightsResponseTF;
-	private static JTextArea newsResponseTA, heatResponseTA;
+	private static JTextField loginResponseTA;
+	private static JTextArea newsResponseTA, heatResponseTA, lightingResponseTA;
 	private static JTextField HeatTF;
 	private static JSlider lightSlider;
 	
@@ -62,7 +64,6 @@ public class clientGUI implements ActionListener {
 	private static String host = "localhost";
 	
 	private static UserServiceGrpc.UserServiceBlockingStub blockingStub;
-	private static UserServiceGrpc.UserServiceStub asyncStub;
 	private static UtilitiesServiceGrpc.UtilitiesServiceBlockingStub utilBlockingStub;
 	private static UtilitiesServiceGrpc.UtilitiesServiceStub utilAsyncStub;
 	private static NewsServiceGrpc.NewsServiceBlockingStub newsBlockingStub;
@@ -71,6 +72,7 @@ public class clientGUI implements ActionListener {
 	private static final int MAX = 10;
 	private static final int DEFAULT = 4;
 	
+	// Listener that discovers the services that are registered with jmDNS
 	public static class Listener implements ServiceListener {
         @Override
         public void serviceAdded(ServiceEvent serviceEvent) {
@@ -85,6 +87,7 @@ public class clientGUI implements ActionListener {
         @Override
         public void serviceResolved(ServiceEvent serviceEvent) {
             System.out.println("Service resolved: " + serviceEvent.getInfo());
+            // the ports for the connections are assigned depending on the service event info received
             if (serviceEvent.getName().equals("user")) {
                 userPort = serviceEvent.getInfo().getPort();
             } else if (serviceEvent.getName().equals("utilities")) {
@@ -95,13 +98,13 @@ public class clientGUI implements ActionListener {
         }
     }
 	
-	
+	/*
+	 * -------------------------- USER AUTH JPANEL ------------------------------------------
+	 */
 
 	private JPanel getLoginPanel() {
 
 		JPanel panel = new JPanel();
-
-		BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.X_AXIS);
 
 		JLabel usernameLB = new JLabel("Username: ")	;
 		panel.add(usernameLB);
@@ -131,17 +134,19 @@ public class clientGUI implements ActionListener {
 		loginResponseTA .setEditable(false);
 		panel.add(loginResponseTA);
 
-		panel.setLayout(boxlayout);
+		panel.setLayout(new FlowLayout());
 
 		return panel;
 
 	}
+	
+	/*
+	 * -------------------------- LIGHTS JPANEL ------------------------------------------
+	 */
 
 	private JPanel getLightsPanel() {
 
 		JPanel panel = new JPanel();
-
-		BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.X_AXIS);
 
 		JButton LightsOnBtn = new JButton("Lights On");
 		LightsOnBtn.addActionListener(this);
@@ -173,25 +178,25 @@ public class clientGUI implements ActionListener {
 		panel.add(LightsSettingBtn);
 		panel.add(Box.createRigidArea(new Dimension(10, 0)));
 
-		lightingResponseTA = new JTextField("",20);
+		lightingResponseTA = new JTextArea(10, 20);
 		lightingResponseTA .setEditable(false);
 		panel.add(lightingResponseTA);
 		panel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 
-		panel.setLayout(boxlayout);
+		panel.setLayout(new FlowLayout());
 
 		return panel;
 
 	}
 	
+	/*
+	 * -------------------------- HEAT JPANEL ------------------------------------------
+	 */
+	
 	private JPanel getHeatPanel() {
 
 		JPanel panel = new JPanel();
-
-		BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.X_AXIS);
-
-		
 
 		JButton LightsOnBtn = new JButton("Aircon On");
 		LightsOnBtn.addActionListener(this);
@@ -215,21 +220,23 @@ public class clientGUI implements ActionListener {
 		panel.add(SelectHeatBtn);
 		panel.add(Box.createRigidArea(new Dimension(10, 0)));
 
-		heatResponseTA = new JTextArea(5, 15);
+		heatResponseTA = new JTextArea(10, 20);
 		heatResponseTA .setEditable(false);
 		panel.add(heatResponseTA);
 
-		panel.setLayout(boxlayout);
+		panel.setLayout(new FlowLayout());
 
 		return panel;
 
 	}
+	
+	/*
+	 * -------------------------- NEWS JPANEL ------------------------------------------
+	 */
 
 	private JPanel getNewsPanel() {
 
 		JPanel panel = new JPanel();
-
-		BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.X_AXIS);
 		
 		JButton NewsPowerBtn = new JButton("Status");
 		NewsPowerBtn.addActionListener(this);
@@ -239,14 +246,14 @@ public class clientGUI implements ActionListener {
 		JButton NewsStreamBtn = new JButton("Headlines");
 		NewsStreamBtn.addActionListener(this);
 		panel.add(NewsStreamBtn);
-		panel.add(Box.createRigidArea(new Dimension(20, 0)));
+		panel.add(Box.createRigidArea(new Dimension(10, 0)));
 
-		newsResponseTA = new JTextArea(5, 15);
+		newsResponseTA = new JTextArea(10, 20);
 		newsResponseTA .setEditable(false);
 		panel.add(newsResponseTA);
 		panel.add(Box.createRigidArea(new Dimension(10, 0)));
 
-		panel.setLayout(boxlayout);
+		panel.setLayout(new FlowLayout());
 
 		return panel;
 
@@ -261,7 +268,7 @@ public class clientGUI implements ActionListener {
 		try {
             // create a JmDNS instance
             JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
-            // add service listeners for TV, lights, and curtain server
+            // add service listeners for User, Utilities, and News server
             jmdns.addServiceListener("_user._tcp.local.", new clientGUI.Listener());
             jmdns.addServiceListener("_utilities._tcp.local.", new clientGUI.Listener());
             jmdns.addServiceListener("_news._tcp.local.", new clientGUI.Listener());
@@ -285,7 +292,7 @@ public class clientGUI implements ActionListener {
 		// Set the BoxLayout to be X_AXIS: from left to right
 		BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
 
-		panel.setLayout(boxlayout);
+		panel.setLayout(new GridLayout());
 
 		// Set border for the panel
 		panel.setBorder(new EmptyBorder(new Insets(100, 200, 100, 200)));
@@ -373,34 +380,39 @@ public class clientGUI implements ActionListener {
 			lightingResponseTA.setText("Lighting system turned off");
 		}
 	}
+
 	
-	public static void adjustLightSetting() {
+	
+	public static void adjustLightSetting(int setting) {
+		final CountDownLatch finishLatch = new CountDownLatch(1);
 		
-		StreamObserver<LightSettingResponse> responseObserver = new StreamObserver<LightSettingResponse>() {
-			
-			@Override
-			public void onNext(LightSettingResponse lsr) {
-				
-			}
-			@Override
-			public void onError(Throwable t) {
-				t.printStackTrace();
-			}
-			@Override
-			public void onCompleted() {
-				System.out.println("Lights set");
-				lightingResponseTA.setText("Choose again");
-				
-			}
-		};
+		StreamObserver<LightSettingRequest> requestObserver = utilAsyncStub.withDeadlineAfter(5, TimeUnit.SECONDS)
+				.adjustLightSetting(new StreamObserver<LightSettingResponse>() {
+					@Override
+					public void onNext(LightSettingResponse lsr) {
+						System.out.println(lsr);
+						lightingResponseTA.append("\nFinal Light Setting: "+lsr.getSetting());
+					}
+					@Override
+					public void onError(Throwable t) {
+						t.printStackTrace();
+						finishLatch.countDown();
+					}
+					@Override
+					public void onCompleted() {
+						System.out.println("Lights set");
+						lightingResponseTA.append("\nLighting adjustment completed");
+						finishLatch.countDown();
+					}
+				});
 		
-		
-		StreamObserver<LightSettingRequest> requestObserver = utilAsyncStub.adjustLightSetting(responseObserver);
 		
 		try {
-			// simulation of request stream from the client
-			int lightSetting = lightSlider.getValue();
-			requestObserver.onNext(LightSettingRequest.newBuilder().setSetting(lightSetting).build());
+			// simulation of light adjustment request stream from the client
+			requestObserver.onNext(LightSettingRequest.newBuilder().setSetting(setting).build());
+			requestObserver.onNext(LightSettingRequest.newBuilder().setSetting(setting+1).build());
+			requestObserver.onNext(LightSettingRequest.newBuilder().setSetting(setting+2).build());
+			requestObserver.onNext(LightSettingRequest.newBuilder().setSetting(setting+3).build());
 			
 			Thread.sleep(new Random().nextInt(1000) + 500);
 			
@@ -410,26 +422,8 @@ public class clientGUI implements ActionListener {
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 		}
-		
 		requestObserver.onCompleted();		
-		}
-		
-		
-		
-		/*
-		 * try {
-			// simulation of request stream from the client
-			requestObserver.onNext(LightSettingRequest.newBuilder().setSetting(lightSetting).build());
-			
-			Thread.sleep(new Random().nextInt(1000) + 500);
-			
-		} catch (RuntimeException e) {
-			requestObserver.onError(e);
-			throw e;
-		} catch(InterruptedException e) {
-			e.printStackTrace();
-		}
-		 */
+	}
 		
 	
 	
@@ -577,6 +571,10 @@ public class clientGUI implements ActionListener {
         
 	}
 	
+	/*
+	 * ------------------- BUTTON EVENT HANDLER - USED TO CALL ALL OF THE ACTION EVENTS ------------------------------------------
+	 */
+	
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -590,9 +588,7 @@ public class clientGUI implements ActionListener {
 			try {
 				ManagedChannel userChannel = ManagedChannelBuilder.forAddress(host, userPort).usePlaintext().build();
 				
-				blockingStub = UserServiceGrpc.newBlockingStub(userChannel);
-				asyncStub = UserServiceGrpc.newStub(userChannel);
-				
+				blockingStub = UserServiceGrpc.newBlockingStub(userChannel);				
 				if (label.equals("Login")){
 					login();
 				}
@@ -627,7 +623,7 @@ public class clientGUI implements ActionListener {
 					HeatOff();
 				}
 				else if(label.equals("Confirm")) {
-					adjustLightSetting();
+					adjustLightSetting(lightSlider.getValue());
 				}
 				else {
 					selectHeatTemp();

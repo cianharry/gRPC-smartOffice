@@ -18,11 +18,10 @@ public class UtilitiesServer extends UtilitiesServiceImplBase {
 		
 		System.out.println("Starting gRPC Utilities Server");
 		
+		// Create & Register utilities service with jmDNS
 		try {
 			int PORT = 50051;
 			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
-			
-			// Create & Register utilities service
 	        ServiceInfo serviceInfo = ServiceInfo.create("_utilities._tcp.local.", "utilities", PORT, "Utilities server gives you access to lighting and air conditioning");
 	        jmdns.registerService(serviceInfo);
 	        UtilitiesServer utServer = new UtilitiesServer();
@@ -42,6 +41,12 @@ public class UtilitiesServer extends UtilitiesServiceImplBase {
         }
 		
 	}
+	
+	/*
+	 * ------------------------------------------- LIGHTS ------------------------------------------------------
+	 */
+	
+	//-------------------------------- Unary RPC implementation -------------------------------------------------
 	
 	@Override
 	public void switchLightPower(LightPowerRequest request, StreamObserver<LightPowerResponse> responseObserver) {
@@ -64,6 +69,8 @@ public class UtilitiesServer extends UtilitiesServiceImplBase {
 		responseObserver.onNext(response);
         responseObserver.onCompleted();
 	}
+	
+	//-------------------------------- Client Stream RPC implementation -------------------------------------------------
 	
 	@Override
 	public StreamObserver<LightSettingRequest> adjustLightSetting(final StreamObserver<LightSettingResponse> responseObserver) {
@@ -89,6 +96,13 @@ public class UtilitiesServer extends UtilitiesServiceImplBase {
 		};
 	}
 	
+	
+	/*
+	 * ------------------------------------------- HEAT ------------------------------------------------------
+	 */
+	
+	//-------------------------------- Unary RPC implementation -------------------------------------------------
+	
 	@Override
 	public void switchHeatPower(HeatPowerRequest request, StreamObserver<HeatPowerResponse> responseObserver) {
 		// notification that the method has been invoked
@@ -111,24 +125,30 @@ public class UtilitiesServer extends UtilitiesServiceImplBase {
         responseObserver.onCompleted();
 	}
 	
+	//-------------------------------- Server Stream RPC implementation -------------------------------------------------
+	
 	@Override
 	public void selectHeatTemp(HeatTempRequest request, StreamObserver<HeatTempResponse> responseObserverHeat) {
 		int temp = request.getTemp();
 		
 		System.out.println("Request recieved to set office aircon to "+temp+"°C");
-		
-		HeatTempResponse response = HeatTempResponse.newBuilder().setTemp(temp-4).build();
-		HeatTempResponse response1 = HeatTempResponse.newBuilder().setTemp(temp-3).build();
-		HeatTempResponse response2 = HeatTempResponse.newBuilder().setTemp(temp-2).build();
-		HeatTempResponse response3 = HeatTempResponse.newBuilder().setTemp(temp-1).build();
-		HeatTempResponse response4 = HeatTempResponse.newBuilder().setTemp(temp).build();
-		
-		responseObserverHeat.onNext(response);
-		responseObserverHeat.onNext(response1);
-		responseObserverHeat.onNext(response2);
-		responseObserverHeat.onNext(response3);
-		responseObserverHeat.onNext(response4);
-		
+		try {
+			HeatTempResponse response = HeatTempResponse.newBuilder().setTemp(temp-4).build();
+			HeatTempResponse response1 = HeatTempResponse.newBuilder().setTemp(temp-3).build();
+			HeatTempResponse response2 = HeatTempResponse.newBuilder().setTemp(temp-2).build();
+			HeatTempResponse response3 = HeatTempResponse.newBuilder().setTemp(temp-1).build();
+			HeatTempResponse response4 = HeatTempResponse.newBuilder().setTemp(temp).build();
+			
+			responseObserverHeat.onNext(response);
+			responseObserverHeat.onNext(response1);
+			responseObserverHeat.onNext(response2);
+			responseObserverHeat.onNext(response3);
+			responseObserverHeat.onNext(response4);
+		} catch (Error e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+
 		responseObserverHeat.onCompleted();
 	}
 	
