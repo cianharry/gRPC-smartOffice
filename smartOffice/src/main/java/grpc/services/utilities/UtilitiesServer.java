@@ -140,9 +140,29 @@ public class UtilitiesServer extends UtilitiesServiceImplBase {
 			HeatTempResponse response4 = HeatTempResponse.newBuilder().setTemp(temp).build();
 			
 			responseObserverHeat.onNext(response);
+			 try {
+		            Thread.sleep(2000);
+		        } catch (InterruptedException e) {
+		            e.printStackTrace();
+		        }
 			responseObserverHeat.onNext(response1);
+			 try {
+		            Thread.sleep(2000);
+		        } catch (InterruptedException e) {
+		            e.printStackTrace();
+		        }
 			responseObserverHeat.onNext(response2);
+			 try {
+		            Thread.sleep(2000);
+		        } catch (InterruptedException e) {
+		            e.printStackTrace();
+		        }
 			responseObserverHeat.onNext(response3);
+			 try {
+		            Thread.sleep(2000);
+		        } catch (InterruptedException e) {
+		            e.printStackTrace();
+		        }
 			responseObserverHeat.onNext(response4);
 		} catch (Error e) {
             System.out.println(e.getMessage());

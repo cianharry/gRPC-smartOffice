@@ -475,7 +475,7 @@ public class clientGUI implements ActionListener {
 			
 			@Override
 			public void onNext(HeatTempResponse htr) {
-				heatResponseTA.append("Responding: "+htr.getTemp()+"°C");
+				heatResponseTA.append("\nResponding: "+htr.getTemp()+"°C");
 				System.out.println("Responding: "+htr.getTemp()+"°C");
 			}
 
@@ -488,7 +488,7 @@ public class clientGUI implements ActionListener {
 			@Override
 			public void onCompleted() {
 				System.out.println("Office temperature has reached the selected level: "+heat+"°C");
-				heatResponseTA.setText("Office temperature has reached the selected level: "+heat+"°C");
+				heatResponseTA.append("\nOffice temperature has reached the selected level: "+heat+"°C");
 			}
 		};
 		
