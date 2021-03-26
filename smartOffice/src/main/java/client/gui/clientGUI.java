@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -27,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import grpc.services.news.NewsPowerRequest;
@@ -105,6 +107,12 @@ public class clientGUI implements ActionListener {
 	private JPanel getLoginPanel() {
 
 		JPanel panel = new JPanel();
+		
+		String title = "User Authentication";
+		Border border = BorderFactory.createTitledBorder(title);
+		panel.setBorder(border);
+		
+		BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
 
 		JLabel usernameLB = new JLabel("Username: ")	;
 		panel.add(usernameLB);
@@ -119,7 +127,9 @@ public class clientGUI implements ActionListener {
 		passwordTF = new JTextField("",10);
 		panel.add(passwordTF);
 		panel.add(Box.createRigidArea(new Dimension(10, 0)));
-
+		
+		panel.add(Box.createHorizontalStrut(10));
+		
 		JButton LoginBtn = new JButton("Login");
 		LoginBtn.addActionListener(this);
 		panel.add(LoginBtn);
@@ -134,7 +144,8 @@ public class clientGUI implements ActionListener {
 		loginResponseTA .setEditable(false);
 		panel.add(loginResponseTA);
 
-		panel.setLayout(new FlowLayout());
+		// panel.setLayout(new FlowLayout());
+		panel.setLayout(boxlayout);
 
 		return panel;
 
@@ -147,6 +158,12 @@ public class clientGUI implements ActionListener {
 	private JPanel getLightsPanel() {
 
 		JPanel panel = new JPanel();
+		
+		String title = "Lighting Preferences";
+		Border border = BorderFactory.createTitledBorder(title);
+		panel.setBorder(border);
+		
+		BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
 
 		JButton LightsOnBtn = new JButton("Lights On");
 		LightsOnBtn.addActionListener(this);
@@ -178,13 +195,14 @@ public class clientGUI implements ActionListener {
 		panel.add(LightsSettingBtn);
 		panel.add(Box.createRigidArea(new Dimension(10, 0)));
 
-		lightingResponseTA = new JTextArea(10, 20);
+		lightingResponseTA = new JTextArea(5, 20);
 		lightingResponseTA .setEditable(false);
 		panel.add(lightingResponseTA);
 		panel.add(Box.createRigidArea(new Dimension(10, 0)));
 
 
-		panel.setLayout(new FlowLayout());
+		// panel.setLayout(new FlowLayout());
+		panel.setLayout(boxlayout);
 
 		return panel;
 
@@ -197,6 +215,12 @@ public class clientGUI implements ActionListener {
 	private JPanel getHeatPanel() {
 
 		JPanel panel = new JPanel();
+		
+		String title = "Aircon Preferences";
+		Border border = BorderFactory.createTitledBorder(title);
+		panel.setBorder(border);
+		
+		BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
 
 		JButton LightsOnBtn = new JButton("Aircon On");
 		LightsOnBtn.addActionListener(this);
@@ -220,11 +244,12 @@ public class clientGUI implements ActionListener {
 		panel.add(SelectHeatBtn);
 		panel.add(Box.createRigidArea(new Dimension(10, 0)));
 
-		heatResponseTA = new JTextArea(10, 20);
+		heatResponseTA = new JTextArea(5, 20);
 		heatResponseTA .setEditable(false);
 		panel.add(heatResponseTA);
 
-		panel.setLayout(new FlowLayout());
+		// panel.setLayout(new FlowLayout());
+		panel.setLayout(boxlayout);
 
 		return panel;
 
@@ -238,6 +263,12 @@ public class clientGUI implements ActionListener {
 
 		JPanel panel = new JPanel();
 		
+		String title = "Financial Headlines";
+		Border border = BorderFactory.createTitledBorder(title);
+		panel.setBorder(border);
+		
+		BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+		
 		JButton NewsPowerBtn = new JButton("Status");
 		NewsPowerBtn.addActionListener(this);
 		panel.add(NewsPowerBtn);
@@ -248,12 +279,14 @@ public class clientGUI implements ActionListener {
 		panel.add(NewsStreamBtn);
 		panel.add(Box.createRigidArea(new Dimension(10, 0)));
 
-		newsResponseTA = new JTextArea(10, 20);
+		newsResponseTA = new JTextArea(5, 20);
 		newsResponseTA .setEditable(false);
 		panel.add(newsResponseTA);
 		panel.add(Box.createRigidArea(new Dimension(10, 0)));
 
-		panel.setLayout(new FlowLayout());
+		// panel.setLayout(new FlowLayout());
+		panel.setLayout(boxlayout);
+
 
 		return panel;
 
@@ -292,7 +325,7 @@ public class clientGUI implements ActionListener {
 		// Set the BoxLayout to be X_AXIS: from left to right
 		BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
 
-		panel.setLayout(new GridLayout());
+		panel.setLayout(boxlayout);
 
 		// Set border for the panel
 		panel.setBorder(new EmptyBorder(new Insets(100, 200, 100, 200)));
@@ -438,11 +471,11 @@ public class clientGUI implements ActionListener {
 		
 		if(heatpowerresponse.getHpower()) {
 			System.out.println("Aircon system has been turned on...");
-			heatResponseTA.setText("Heating system turned on");
+			heatResponseTA.setText("Aircon system turned on");
 		}
 		else {
 			System.out.println("Aircon system has been turned off...");
-			heatResponseTA.setText("Heating system turned off");
+			heatResponseTA.setText("Aircon system turned off");
 		}
 	}
 	
@@ -455,11 +488,11 @@ public class clientGUI implements ActionListener {
 		
 		if(heatpowerresponse.getHpower()) {
 			System.out.println("Aircon system has been turned on...");
-			heatResponseTA.setText("Heating system turned on");
+			heatResponseTA.setText("Aircon system turned on");
 		}
 		else {
 			System.out.println("Aircon system has been turned off...");
-			heatResponseTA.setText("Heating system turned off");
+			heatResponseTA.setText("Aircon system turned off");
 		}
 	}
 	
@@ -488,12 +521,13 @@ public class clientGUI implements ActionListener {
 			@Override
 			public void onCompleted() {
 				System.out.println("Office temperature has reached the selected level: "+heat+"°C");
-				heatResponseTA.append("\nOffice temperature has reached the selected level: "+heat+"°C");
+				heatResponseTA.append("\nTemperature acheived: "+heat+"°C");
 			}
 		};
 		
 		utilAsyncStub.selectHeatTemp(request, responseObserverHeat);
 		
+		// stops the thread after 3 seconds
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
@@ -514,8 +548,10 @@ public class clientGUI implements ActionListener {
 		
 		if(newspowerresponse.getNpower()) {
 			System.out.println("\nNews Stream activated...");
+			newsResponseTA.append("\n>News Stream activated...");
 		}
 		else {
+			newsResponseTA.append("\n>News Stream inactive...");
 			System.out.println("\nNews stream de-activated...");
 		}
 	}
@@ -523,13 +559,16 @@ public class clientGUI implements ActionListener {
 	
 	public static void streamNews() {
 		
+		// creating an array list to store the news headlines coming from the server
 		ArrayList<String> newsContents = new ArrayList<>();
 		 
        StreamObserver<NewsStreamResponse> responseObserver = new StreamObserver<NewsStreamResponse>() {
            @Override
            public void onNext(NewsStreamResponse nsr) {
-               System.out.println("> gathering... "+nsr.getContent());
-               newsContents.add(nsr.getContent());
+	           System.out.println("> gathering... "+nsr.getContent());
+	           newsResponseTA.append("\n> gathering...");
+	           // add the new headline to the array list
+	           newsContents.add(nsr.getContent());
            }
 
            @Override
@@ -540,6 +579,7 @@ public class clientGUI implements ActionListener {
 
            @Override
            public void onCompleted() {
+        	   // notify the user of the number of headlines and return them individually while looping through the array list
         	   System.out.println("\nNews Headlines: " + newsContents.size());
         	   newsResponseTA.append("\nNews Headlines: " + newsContents.size());
                for(String content : newsContents) {
@@ -553,9 +593,25 @@ public class clientGUI implements ActionListener {
        
        StreamObserver<NewsStreamRequest> requestObserver = newsAsyncStub.streamNews(responseObserver);
        
+       // Simulating the stream of news headlines for the server to process
        try {
+    	   try {
+	            Thread.sleep(2000);
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
     	   requestObserver.onNext(NewsStreamRequest.newBuilder().setContent("Nasdaq index has fallen by 2.1% overnight").build());
+    	   try {
+	            Thread.sleep(2000);
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
     	   requestObserver.onNext(NewsStreamRequest.newBuilder().setContent("FTSE 100 index increased 0.7% overnight").build());
+    	   try {
+	            Thread.sleep(2000);
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
     	   requestObserver.onNext(NewsStreamRequest.newBuilder().setContent("Dow Jones Industrial Avergae at an all time low").build());
     	   
     	   Thread.sleep(new Random().nextInt(1000) + 500);
@@ -566,7 +622,7 @@ public class clientGUI implements ActionListener {
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 		}
-           
+        // close out the stream
         requestObserver.onCompleted();
         
 	}
@@ -586,6 +642,7 @@ public class clientGUI implements ActionListener {
 			System.out.println("\nUser authentication microservice being invoked ...");
 			
 			try {
+				// creating the managed channel for the User Service
 				ManagedChannel userChannel = ManagedChannelBuilder.forAddress(host, userPort).usePlaintext().build();
 				
 				blockingStub = UserServiceGrpc.newBlockingStub(userChannel);				
@@ -606,6 +663,7 @@ public class clientGUI implements ActionListener {
 			System.out.println("\nUtilities microservice being invoked ...");
 			
 			try {
+				// creating the managed channel for the Utilities Service
 				ManagedChannel utilitiesChannel = ManagedChannelBuilder.forAddress(host, utilitiesPort).usePlaintext().build();
 				
 				utilBlockingStub = UtilitiesServiceGrpc.newBlockingStub(utilitiesChannel);
@@ -640,6 +698,7 @@ public class clientGUI implements ActionListener {
 			System.out.println("\nNews streaming microservice being invoked ...");
 			
 			try {
+				// creating the managed channel for the News Service
 				ManagedChannel newsChannel = ManagedChannelBuilder.forAddress(host, newsPort).usePlaintext().build();
 				
 				newsBlockingStub = NewsServiceGrpc.newBlockingStub(newsChannel);

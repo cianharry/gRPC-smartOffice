@@ -83,6 +83,11 @@ public class NewsServer extends NewsServiceImplBase {
                 
                 // The string builder is used to extract the request value and return the news stream to the client as headlines
                 NewsStreamResponse res = NewsStreamResponse.newBuilder().setContent(sb.toString()).build();
+                try {
+    	            Thread.sleep(2000);
+    	        } catch (InterruptedException e) {
+    	            e.printStackTrace();
+    	        }
                 responseObserver.onNext(res); 
             }
 
